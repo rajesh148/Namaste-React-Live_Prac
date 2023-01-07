@@ -1,0 +1,9 @@
+*.md
+
+.md
+
+node_modules
+
+dist
+
+.parcel-cache

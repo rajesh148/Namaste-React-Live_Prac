@@ -1,0 +1,47 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing:border-box ;
+}
+
+body{
+    background-color: aquamarine;
+}
+
+h1{
+    color: red;
+}
+
+#container {
+        background-color:gray;
+    }
+.title{
+    color: wheat;
+    text-align: center;
+    position: relative;
+    top: 20px;
+}
+
+.logo{
+    text-align: center;
+    position: relative;
+    top: 30px;
+    padding: 10px;
+    /* background-color: blueviolet; */
+    width: 100px;
+    
+}
+
+.searchbar{
+    text-align: center;
+}
+
+.userIcon{
+    text-align: center;
+    position: relative;
+    bottom: 40px;
+    left: 850px;
+    background-color: black;
+    width: 100px;
+    border-radius: 10px;
+}
