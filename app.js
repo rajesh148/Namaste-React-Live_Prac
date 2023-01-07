@@ -9,7 +9,7 @@ const logoURL =
 const Title = () => {
   return (
     <h2 className="title" key="h2">
-      This is a title
+      This is a title no
     </h2>
   );
 };
