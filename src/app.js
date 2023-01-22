@@ -4,79 +4,56 @@ import ReactDOM from "react-dom/client";
 import Header from "./components/Header";
 import Body from "./components/Body";
 import Footer from "./components/Footer";
+import About from "./components/About";
+import ErrorPage from "./components/ErrorPage";
+import Contact from "./components/Contact";
 
-/**
- * Header
- *  -Logo (title)
- *  -NavItems [Right side]
- *  -Cart
- * Body
- *  -Search bar
- *  -RestaurantList
- *    -RestaurantCards [many cards]
- *      -Images
- *      -Name
- *      -Rating
- *      -Cusines
- * Footer
- *  -links
- *  -copyright
- */
-
-// //Config Driven UI
-// const config = [
-//   {
-//     type: "carousel",
-//     cards: [
-//       {
-//         offerName: "50% off",
-//       },
-//       {
-//         offerName: "30% off",
-//       },
-//       {
-//         offerName: "No delivery fee",
-//       },
-//     ],
-//   },
-//   {
-//     type: "restaurants",
-//     cards: [
-//       {
-//         name: "SSS Idle",
-//         image:
-//           "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_508,h_320,c_fill/weufsah9zwqtyvmfecw1",
-//         cusines: ["South Indian", "Tiffin"],
-//         rating: "4.2",
-//       },
-//       {
-//         name: "Cake zone",
-//         image:
-//           "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_508,h_320,c_fill/weufsah9zwqtyvmfecw1",
-//         cusines: ["South Indian", "Tiffin"],
-//         rating: "4.2",
-//       },
-//       {
-//         name: "Taste of Wonder",
-//         image:
-//           "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_508,h_320,c_fill/weufsah9zwqtyvmfecw1",
-//         cusines: ["South Indian", "Tiffin"],
-//         rating: "4.2",
-//       },
-//     ],
-//   },
-// ];
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import RestaurantMenu from "./components/RestaurantMenu";
+import Profile from "./components/Profile";
 
 const AppLayout = () => {
   return (
     <React.Fragment>
       <Header />
-      <Body />
+      <Outlet />
       <Footer />
     </React.Fragment>
   );
 };
 
+const appRouter = createBrowserRouter([
+  {
+    path: "/",
+    element: <AppLayout />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "/about",
+        element: <About />,
+        children: [
+          {
+            path: "/profile",
+            element: <Profile />,
+          },
+        ],
+      },
+      {
+        path: "/contact",
+        element: <Contact />,
+      },
+      {
+        path: "/",
+        element: <Body />,
+      },
+      {
+        path: "/restaurant/:id",
+        element: <RestaurantMenu />,
+      },
+    ],
+  },
+]);
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-root.render(<AppLayout />);
+root.render(<RouterProvider router={appRouter} />);
