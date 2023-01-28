@@ -6,8 +6,8 @@ const ErrorPage = () => {
   return (
     <div>
       <h1>Opps!!!</h1>
-      <h3>{err.error.message}</h3>
-      <h3>Status Text: {err.statusText + ":" + err.status}</h3>
+      <h3>{err?.error?.message}</h3>
+      <h3>Status Text: {err?.statusText + ":" + err?.status}</h3>
     </div>
   );
 };
