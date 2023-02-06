@@ -7,7 +7,7 @@ import { filterData } from "../utils/helper";
 import useAllRestaurantsInfo from "../utils/useAllRestaurantsInfo";
 import useOnline from "../utils/useOnline";
 
-const Body = () => {
+const Body = ({ user }) => {
   const [allRestaurants, filteredRestaurants, searchText] =
     useAllRestaurantsInfo();
 
@@ -23,20 +23,22 @@ const Body = () => {
     <Shimmer />
   ) : (
     <>
-      <div className="search-container">
-        <h1>{filteredRestaurants.length} Restaurants for you!!</h1>
+      <div className="flex justify-evenly p-4 bg-white-100 shadow-md">
+        <h1 className="sm:text-xl  md:text-3xl font-medium">
+          {filteredRestaurants.length} Restaurants for you!!
+        </h1>
         <div>
           <input
             type="text"
             placeholder="Search"
-            className="search-input"
+            className="sm:w-30 sm:p-2 md:w-96 h-10 p-2 hover:bg-gray-50"
             value={searchText}
             onChange={(e) => {
               setSearchText(e.target.value);
             }}
           />
           <button
-            className="search-btn"
+            className="p-2 mx-5 bg-blue-400 rounded-md w-28 text-white text-md font-medium"
             onClick={() => {
               //need to filter the data
               const data = filterData(searchText, allRestaurants);
@@ -49,7 +51,7 @@ const Body = () => {
           </button>
         </div>
       </div>
-      <div className="restaurant-list">
+      <div className=" flex flex-wrap p-5 gap-9">
         {filteredRestaurants.length === 0 ? (
           <h1>No data!!</h1>
         ) : (
@@ -59,7 +61,7 @@ const Body = () => {
                 key={restaurant?.data?.id}
                 to={"/restaurant/" + restaurant?.data?.id}
               >
-                <RestaurantCard {...restaurant?.data} />
+                <RestaurantCard user={user} {...restaurant?.data} />
               </Link>
             );
           })
