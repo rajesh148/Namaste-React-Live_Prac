@@ -15,8 +15,18 @@ const useAllRestaurantsInfo = () => {
     );
 
     const json = await data.json();
-    setAllRestaurants(json.data?.cards[2]?.data?.data?.cards);
-    setFilteredRestaurants(json.data?.cards[2]?.data?.data?.cards);
+    console.log(
+      "jsonnnn ",
+      json.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants
+    );
+    // debugger;
+    setAllRestaurants(
+      json.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants
+    );
+    // setAllRestaurants(json.data?.cards[2]?.data?.data?.cards);
+    setFilteredRestaurants(
+      json.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants
+    );
   }
 
   return [allRestaurants, filteredRestaurants, searchText];

@@ -19,6 +19,8 @@ const Body = ({ user }) => {
 
   if (!allRestaurants) return null;
 
+  console.log("all Res", allRestaurants);
+
   return allRestaurants.length === 0 ? (
     <Shimmer />
   ) : (
@@ -58,10 +60,10 @@ const Body = ({ user }) => {
           filteredRestaurants.map((restaurant) => {
             return (
               <Link
-                key={restaurant?.data?.id}
-                to={"/restaurant/" + restaurant?.data?.id}
+                key={restaurant?.info?.id}
+                to={"/restaurant/" + restaurant?.info?.id}
               >
-                <RestaurantCard user={user} {...restaurant?.data} />
+                <RestaurantCard user={user} {...restaurant?.info} />
               </Link>
             );
           })
