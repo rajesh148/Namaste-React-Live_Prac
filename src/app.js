@@ -58,6 +58,7 @@ const appRouter = createBrowserRouter([
       },
       {
         path: "/",
+        index: true,
         element: <Body />,
       },
       {
