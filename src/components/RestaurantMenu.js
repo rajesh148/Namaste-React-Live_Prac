@@ -1,34 +1,84 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { IMG_CDN_URL } from "../config";
-import MenuItem from "./MenuItem";
+import React from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Shimmer from "./Shimmer";
-import useRestaurantInfo from "../utils/useRestaurentInfo";
+import { IMG_CDN_URL } from "../config";
+import useRestaurentInfo from "../utils/useRestaurentInfo";
 
 const RestaurantMenu = () => {
   const { id } = useParams();
-  const restaurant = useRestaurantInfo(id);
+  const navigate = useNavigate();
+  const restaurantData = useRestaurentInfo(id);
 
-  return !restaurant ? (
-    <Shimmer />
-  ) : (
-    <div className="menu">
-      <div className="header-menu">
-        <img src={IMG_CDN_URL + restaurant.cloudinaryImageId} />
-        <div className="item-details">
-          <h2 className="restaurant-name">{restaurant?.name}</h2>
-          <div>{restaurant?.cuisines?.join(", ")}</div>
-          <div>
-            {restaurant?.locality}, {restaurant?.area}
-          </div>
-          <span>Rating: {restaurant?.avgRating} | </span>
-          <span>{restaurant?.costForTwoMsg}</span>
+  if (!restaurantData) return <Shimmer />;
+
+  const { info, menu } = restaurantData;
+
+  const handleAddToCart = (item) => {
+    console.log(item);
+  };
+
+  return (
+    <div className="max-w-5xl mx-auto px-4 mt-6">
+      {/* Header Section */}
+      <div className="flex items-center gap-4 border-b pb-4">
+        <img
+          className="w-40 h-32 rounded-lg object-cover"
+          src={IMG_CDN_URL + info?.cloudinaryImageId}
+          alt={info?.name}
+        />
+        <div>
+          <h2 className="text-2xl font-bold">{info?.name}</h2>
+          <p className="text-gray-500">{info?.cuisines?.join(", ")}</p>
+          <p className="text-sm">{info?.areaName}</p>
+          <p className="text-sm">
+            ⭐ {info?.avgRating} | {info?.costForTwoMessage}
+          </p>
+        </div>
+        <div>
+          <button
+            onClick={() => navigate("/")}
+            className="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-white bg-orange-600 hover:bg-orange-700 font-medium rounded-md focus:outline-none"
+          >
+            Go to Home
+          </button>
         </div>
       </div>
-      <div className="menu-items">
-        {Object.values(restaurant?.menu?.items).map((restaurant, index) => {
-          return <MenuItem {...restaurant} key={restaurant.id} />;
-        })}
+
+      <div className="menu-items mt-6 space-y-4">
+        <h3 className="text-2xl font-semibold mb-4">Menu</h3>
+
+        {menu.map((item, index) => (
+          <div
+            key={`${item.id}-${index}`}
+            className="flex justify-between items-start gap-4 border rounded-lg p-4 shadow-sm hover:shadow-md"
+          >
+            {/* Left: Info */}
+            <div className="flex-1">
+              <h4 className="font-medium text-base">{item.name}</h4>
+              <p className="text-sm text-gray-600 mt-1">{item.description}</p>
+              <p className="text-sm font-semibold mt-2">
+                ₹{(item.price || item.defaultPrice) / 100}
+              </p>
+
+              {/* ✅ ADD Button */}
+              <button
+                className="mt-2 px-4 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600"
+                onClick={() => handleAddToCart(item)}
+              >
+                ADD
+              </button>
+            </div>
+
+            {/* Right: Image */}
+            {item.imageId && (
+              <img
+                src={IMG_CDN_URL + item.imageId}
+                alt={item.name}
+                className="w-24 h-24 object-cover rounded-md"
+              />
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );

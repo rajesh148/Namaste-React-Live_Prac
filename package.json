@@ -2,25 +2,35 @@
   "name": "namaste-react-live_prac",
   "version": "1.0.0",
   "description": "React live class",
-  "main": "app.js",
   "scripts": {
     "start": "parcel index.html",
     "build": "parcel build index.html",
-    "test": "jest"
+    "test": "jest",
+    "reset": "rm -rf node_modules .parcel-cache package-lock.json && npm install"
   },
   "author": "Rajesh",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.20.7",
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
+    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/react": "^16.3.0",
+    "babel-jest": "^30.0.5",
     "babel-plugin-transform-remove-console": "^6.9.4",
+    "jest": "^30.0.5",
+    "jest-environment-jsdom": "^30.0.5",
     "parcel": "^2.8.2",
     "postcss": "^8.4.21",
     "process": "^0.11.10",
     "tailwindcss": "^3.2.4"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.8.2",
+    "lucide-react": "^0.534.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-redux": "^9.2.0",
     "react-router-dom": "^6.7.0",
     "react-shimmer-effects-18": "^1.0.4"
   },

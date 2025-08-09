@@ -1,127 +1,109 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import Logo from "../assets/images/FoodVillaLogo.jpg";
-import UserContext from "../utils/UserContext";
-
-function loggedInUser() {
-  //some api calls
-  return false;
-}
-
-const Title = () => {
-  return (
-    <a href="/">
-      <img
-        className="h-28 p-2"
-        alt="logo"
-        // src="https://cdn.octopix.in/uploads/company-logo/2020/11/19/food-villa-pSJVhwoN8KxgwV9jtuB1MlosJ0ejoKfiBiVO1jJPLM61shyarbxVvjIFy3DVpbUML8eBxcUo7BOWXQcd-350x350.jpg"
-        src={Logo}
-      />
-    </a>
-  );
-};
-
 const Header = () => {
-  const [loggedIn, setLoggedIn] = useState(true);
-  const [navbar, setNavbar] = useState(false);
-  const { user } = useContext(UserContext);
-  return (
-    <>
-      <nav className="w-full bg-red-200 shadow">
-        <div className="justify-between px-3 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8">
-          <div>
-            <div className="flex items-center justify-between py-3 md:py-5 md:block">
-              <a href="javascript:void(0)">
-                <h2 className="text-2xl font-bold">
-                  <Title />
-                </h2>
-              </a>
-              <div className="md:hidden">
-                <button
-                  className="p-2 text-gray-700 rounded-md outline-none focus:border-gray-400 focus:border"
-                  onClick={() => setNavbar(!navbar)}
-                >
-                  {navbar ? (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-6 h-6"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-6 h-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M4 6h16M4 12h16M4 18h16"
-                      />
-                    </svg>
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div
-              className={`flex-1 justify-self-center pb-3 mt-8 md:block md:pb-0 md:mt-0 ${
-                navbar ? "block" : "hidden"
-              }`}
-            >
-              <ul className="items-center justify-center space-y-8 md:flex md:space-x-6 md:space-y-0">
-                <li className="text-gray-600 hover:text-blue-600">
-                  <Link to="/">Home</Link>
-                </li>
-                <li className="text-gray-600 hover:text-blue-600">
-                  <Link to="/about">About</Link>
-                </li>
-                <li className="text-white-600 hover:text-blue-600">
-                  <Link to="/contact">Contact</Link>
-                </li>
-                <li className="text-gray-600 hover:text-blue-600">
-                  <Link to="/instamart">Instamart</Link>
-                </li>
-                <li className="text-gray-600 hover:text-blue-600">
-                  <Link to="/cart">Cart</Link>
-                </li>
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const cartItemCount = 3;
+  const isLoggedIn = true;
 
-                <li className="text-gray-600 hover:text-blue-600 font-bold">
-                  {user.name}
-                </li>
-                {loggedIn ? (
-                  <button
-                    className="px-4 h-21 mx-4 bg-slate-500 rounded"
-                    onClick={() => setLoggedIn(false)}
-                  >
-                    Logout
-                  </button>
-                ) : (
-                  <button
-                    className="px-4 h-21 mx-4  bg-orange-500 rounded"
-                    onClick={() => setLoggedIn(true)}
-                  >
-                    Login
-                  </button>
-                )}
-              </ul>
+  return (
+    <header className="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-gray-200 transition duration-300">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <div className="flex justify-between items-center">
+          {/* Logo */}
+          <Link to="/" className="flex items-center space-x-2">
+            <span className="text-2xl">🍔</span>
+            <span className="font-bold text-orange-600 text-xl">My Food</span>
+          </Link>
+
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex space-x-6 items-center text-[16px] font-medium">
+            <Link to="/" className="text-gray-700 hover:text-orange-600">
+              Home
+            </Link>
+            <Link to="/about" className="text-gray-700 hover:text-orange-600">
+              About
+            </Link>
+            <Link to="/contact" className="text-gray-700 hover:text-orange-600">
+              Contact
+            </Link>
+            <Link
+              to="/instamart"
+              className="text-gray-700 hover:text-orange-600"
+            >
+              Instamart
+            </Link>
+
+            {/* Cart with Badge */}
+            <div className="relative">
+              <Link to="/cart" className="text-gray-700 hover:text-orange-600">
+                Cart
+              </Link>
+              {cartItemCount > 0 && (
+                <span className="absolute -top-2 -right-3 text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full">
+                  {cartItemCount}
+                </span>
+              )}
             </div>
-          </div>
+
+            <button className="ml-4 px-4 py-1 bg-orange-600 text-white rounded hover:bg-orange-700">
+              {isLoggedIn ? "Logout" : "Login"}
+            </button>
+          </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden text-xl text-gray-700 focus:outline-none"
+          >
+            ☰
+          </button>
         </div>
-      </nav>
-    </>
+      </div>
+
+      {/* Mobile Nav */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden px-4 pb-4 space-y-2 bg-white shadow-md">
+          <Link to="/" className="block text-gray-700 hover:text-orange-600">
+            Home
+          </Link>
+          <Link
+            to="/about"
+            className="block text-gray-700 hover:text-orange-600"
+          >
+            About
+          </Link>
+          <Link
+            to="/contact"
+            className="block text-gray-700 hover:text-orange-600"
+          >
+            Contact
+          </Link>
+          <Link
+            to="/instamart"
+            className="block text-gray-700 hover:text-orange-600"
+          >
+            Instamart
+          </Link>
+          <div className="relative">
+            <Link
+              to="/cart"
+              className="block text-gray-700 hover:text-orange-600"
+            >
+              Cart
+            </Link>
+            {cartItemCount > 0 && (
+              <span className="absolute top-0 right-4 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+                {cartItemCount}
+              </span>
+            )}
+          </div>
+          <button className="w-full mt-2 px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700">
+            {isLoggedIn ? "Logout" : "Login"}
+          </button>
+        </div>
+      )}
+    </header>
   );
 };
 

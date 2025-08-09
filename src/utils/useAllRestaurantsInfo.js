@@ -1,35 +1,26 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const useAllRestaurantsInfo = () => {
   const [allRestaurants, setAllRestaurants] = useState([]);
-  const [filteredRestaurants, setFilteredRestaurants] = useState([]);
-  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
-    //API CALLS
-    getRestaurants();
+    console.log("Fetching restaurants...");
+    fetchRestaurants();
   }, []);
-  async function getRestaurants() {
+
+  const fetchRestaurants = async () => {
     const data = await fetch(
-      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.8459348&lng=80.22652289999999&page_type=DESKTOP_WEB_LISTING"
+      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.836010552259113&lng=80.22676896303892&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
     );
-
     const json = await data.json();
-    console.log(
-      "jsonnnn ",
-      json.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants
-    );
-    // debugger;
-    setAllRestaurants(
-      json.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants
-    );
-    // setAllRestaurants(json.data?.cards[2]?.data?.data?.cards);
-    setFilteredRestaurants(
-      json.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants
-    );
-  }
+    const restaurants =
+      json.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
+    // json.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
 
-  return [allRestaurants, filteredRestaurants, searchText];
+    setAllRestaurants(restaurants || []);
+  };
+
+  return allRestaurants;
 };
 
 export default useAllRestaurantsInfo;

@@ -1,22 +1,37 @@
-import React, { useEffect, useState } from "react";
-import { FETCH_RESTAURENT_MENU_ITEM_URL } from "../config";
+import { useEffect, useState } from "react";
 
-const useRestaurantInfo = (id) => {
-  const [restaurant, setRestaurant] = useState(null);
+const useRestaurentInfo = (id) => {
+  const [restaurantInfo, setRestaurantInfo] = useState(null);
 
   useEffect(() => {
-    getMenuCardsData();
+    getRestaurantData();
   }, []);
 
-  async function getMenuCardsData() {
-    const data = await fetch(FETCH_RESTAURENT_MENU_ITEM_URL + id);
-
+  const getRestaurantData = async () => {
+    const data = await fetch(
+      `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=12.836010552259113&lng=80.22676896303892&restaurantId=${id}&catalog_qa=undefined&submitAction=ENTER`
+    );
     const json = await data.json();
-    console.log(json?.data);
-    setRestaurant(json?.data);
-  }
 
-  return restaurant;
+    const restaurantData = json?.data?.cards?.find(
+      (card) => card?.card?.card?.info
+    )?.card?.card?.info;
+
+    const menuItems =
+      json?.data?.cards
+        ?.find((card) => card?.groupedCard?.cardGroupMap?.REGULAR)
+        ?.groupedCard?.cardGroupMap?.REGULAR?.cards?.flatMap(
+          (c) => c?.card?.card?.itemCards || []
+        )
+        ?.map((item) => item.card.info) || [];
+
+    setRestaurantInfo({
+      info: restaurantData,
+      menu: menuItems,
+    });
+  };
+
+  return restaurantInfo;
 };
 
-export default useRestaurantInfo;
+export default useRestaurentInfo;

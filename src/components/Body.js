@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import RestaurantCard from "./RestaurantCard";
 import Shimmer from "./Shimmer";
 import { filterData } from "../utils/helper";
@@ -14,28 +14,18 @@ const Body = ({ user }) => {
   const [visibleCount, setVisibleCount] = useState(9);
   const loaderRef = useRef(null);
   const isOnline = useOnline();
-
-  // Inside your Body component:
   const location = useLocation();
 
+  // Reset when navigated to "/"
   useEffect(() => {
-    // Reset everything when navigated to "/"
-    if (location.pathname === "/") {
+    if (location.pathname === "/" && allRestaurants.length > 0) {
       setSearchText("");
-      setFilteredRestaurants(allRestaurants); // restore all data
-      setVisibleCount(9); // reset visible items
-    }
-  }, [location.pathname]);
-
-  // 1. Set filteredRestaurants when allRestaurants loads
-  useEffect(() => {
-    if (allRestaurants.length > 0) {
       setFilteredRestaurants(allRestaurants);
-      setDisplayedRestaurants(allRestaurants.slice(0, visibleCount));
+      setVisibleCount(9);
     }
-  }, [allRestaurants]);
+  }, [location.pathname, allRestaurants]);
 
-  // 2. Load more on scroll
+  // Infinite scroll observer
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -45,62 +35,73 @@ const Body = ({ user }) => {
       },
       { rootMargin: "100px" }
     );
-    const currentRef = loaderRef.current;
-    if (currentRef) observer.observe(currentRef);
+
+    const current = loaderRef.current;
+    if (current) observer.observe(current);
     return () => {
-      if (currentRef) observer.unobserve(currentRef);
+      if (current) observer.unobserve(current);
     };
   }, []);
 
-  // 3. Update displayedRestaurants when visibleCount or filteredRestaurants changes
+  // Update displayedRestaurants
   useEffect(() => {
     setDisplayedRestaurants(filteredRestaurants.slice(0, visibleCount));
   }, [filteredRestaurants, visibleCount]);
 
-  // 4. Search logic
   const handleSearch = () => {
     const data = filterData(searchText, allRestaurants);
     setFilteredRestaurants(data);
     setVisibleCount(9);
   };
 
+  // Offline check
   if (!isOnline)
-    return <h1 className="text-center text-red-500">🚫 You are offline</h1>;
+    return (
+      <h1 className="text-center text-red-500 text-xl mt-8">
+        🚫 You are offline
+      </h1>
+    );
+
+  // Initial loading
   if (allRestaurants.length === 0) return <Shimmer />;
 
   return (
     <>
-      {/* 🔍 Search */}
-      <div className="flex flex-col md:flex-row justify-between items-center p-4 bg-white shadow-md">
-        <h1 className="text-xl md:text-3xl font-medium mb-2 md:mb-0">
-          {filteredRestaurants.length} Restaurants for you!!
-        </h1>
-        <div className="flex items-center">
+      {/* 🔍 Search Bar */}
+      <div className="max-w-7xl mx-auto px-5 py-4 flex flex-col md:flex-row justify-between items-center gap-4 bg-white shadow-sm sticky top-[60px] z-40">
+        <h2 className="text-xl md:text-2xl font-semibold text-gray-800">
+          {filteredRestaurants.length} Restaurants for you!
+        </h2>
+
+        <div className="flex w-full md:w-auto items-center gap-3">
           <input
             type="text"
-            placeholder="Search"
-            className="sm:w-30 sm:p-2 md:w-96 h-10 p-2 border border-gray-300 rounded-md"
+            placeholder="Search restaurants..."
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
+            className="w-full md:w-80 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
           />
           <button
-            className="p-2 mx-3 bg-blue-500 hover:bg-blue-600 rounded-md w-28 text-white font-medium"
             onClick={handleSearch}
+            className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition"
           >
             Search
           </button>
         </div>
       </div>
 
-      {/* 🧾 Cards */}
-      <div className="flex flex-wrap justify-center p-5 gap-9">
+      {/* 🧾 Restaurant Cards */}
+      <div className="max-w-7xl mx-auto flex flex-wrap justify-center gap-8 p-6">
         {displayedRestaurants.length === 0 ? (
-          <h1 className="text-xl text-gray-500">No data!!</h1>
+          <h1 className="text-xl text-gray-500 text-center mt-10">
+            😕 No matching restaurants found.
+          </h1>
         ) : (
           displayedRestaurants.map((restaurant) => (
             <Link
               key={restaurant?.info?.id}
-              to={"/restaurant/" + restaurant?.info?.id}
+              to={`/restaurant/${restaurant?.info?.id}`}
+              className="hover:scale-105 transition-transform duration-200"
             >
               <RestaurantCard user={user} {...restaurant?.info} />
             </Link>
@@ -108,7 +109,13 @@ const Body = ({ user }) => {
         )}
       </div>
 
-      <div ref={loaderRef} className="w-full h-10" />
+      {/* 👇 Scroll loader indicator */}
+      <div ref={loaderRef} className="h-10 text-center text-sm text-gray-400">
+        {displayedRestaurants.length > 0 &&
+        displayedRestaurants.length < filteredRestaurants.length
+          ? "Loading more restaurants..."
+          : ""}
+      </div>
     </>
   );
 };
