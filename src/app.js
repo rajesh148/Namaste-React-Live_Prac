@@ -1,10 +1,9 @@
-import React, { lazy, Suspense, useContext, useState } from "react";
+import React, { lazy, Suspense, useState } from "react";
 import ReactDOM from "react-dom/client";
 
 import Header from "./components/Header";
 import Body from "./components/Body";
 import Footer from "./components/Footer";
-// import About from "./components/About";
 import ErrorPage from "./components/ErrorPage";
 import Contact from "./components/Contact";
 
@@ -16,47 +15,54 @@ import UserContext from "./utils/UserContext";
 import { Provider } from "react-redux";
 import appStore from "./utils/store/appStore";
 import { Bounce, ToastContainer } from "react-toastify";
-// import Cart from "./components/Cart";
-
 import Cart from "./components/Cart";
-// import Instamart from "./components/Instamart";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Login from "./components/Login";
 
 const About = lazy(() => import("./components/About"));
 const Instamart = lazy(() => import("./components/Instamart"));
 
+// App layout should NOT hold Provider anymore
 const AppLayout = () => {
   const [user, setUser] = useState({
     name: "Namaste React",
     email: "email@gmail.com",
   });
+
   return (
-    <Provider store={appStore}>
-      <UserContext.Provider value={{ user: user }}>
-        <Header />
-        <Outlet />
-        <Footer />
-        <ToastContainer
-          position="top-center"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick={false}
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-          transition={Bounce}
-        />
-      </UserContext.Provider>
-    </Provider>
+    <UserContext.Provider value={{ user }}>
+      <Header />
+      <Outlet />
+      <Footer />
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
+    </UserContext.Provider>
   );
 };
 
 const appRouter = createBrowserRouter([
   {
+    path: "/login",
+    element: <Login />, // replace with your real login component
+  },
+  {
     path: "/",
-    element: <AppLayout />,
+    element: (
+      <ProtectedRoute>
+        <AppLayout />
+      </ProtectedRoute>
+    ),
     errorElement: <ErrorPage />,
     children: [
       {
@@ -94,7 +100,6 @@ const appRouter = createBrowserRouter([
           </Suspense>
         ),
       },
-      ,
       {
         path: "/cart",
         element: <Cart />,
@@ -105,4 +110,9 @@ const appRouter = createBrowserRouter([
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-root.render(<RouterProvider router={appRouter} />);
+// Wrap the whole RouterProvider in Provider
+root.render(
+  <Provider store={appStore}>
+    <RouterProvider router={appRouter} />
+  </Provider>
+);

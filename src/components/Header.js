@@ -1,15 +1,23 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { logout } from "../utils/store/authSlice";
+import { toast } from "react-toastify";
 
 const Header = () => {
   // const cart = useSelector((store) => store.cart);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   // const cartItemCount = cart.items.length;
-  const isLoggedIn = true;
+  // const isLoggedIn = true;
+  const dispatch = useDispatch();
 
   const cartItems = useSelector((state) => state.cart.items);
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+
+  const handleLogout = () => {
+    toast.success("Logout successfully!");
+    dispatch(logout());
+  };
 
   return (
     <header className="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-gray-200 transition duration-300">
@@ -51,8 +59,11 @@ const Header = () => {
               )}
             </div>
 
-            <button className="ml-4 px-4 py-1 bg-orange-600 text-white rounded hover:bg-orange-700">
-              {isLoggedIn ? "Logout" : "Login"}
+            <button
+              onClick={handleLogout}
+              className="ml-4 px-4 py-1 bg-orange-600 text-white rounded hover:bg-orange-700"
+            >
+              {"Logout"}
             </button>
           </nav>
 
@@ -103,8 +114,11 @@ const Header = () => {
               </span>
             )}
           </div>
-          <button className="w-full mt-2 px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700">
-            {isLoggedIn ? "Logout" : "Login"}
+          <button
+            onClick={handleLogout}
+            className="w-full mt-2 px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700"
+          >
+            {"Logout"}
           </button>
         </div>
       )}
