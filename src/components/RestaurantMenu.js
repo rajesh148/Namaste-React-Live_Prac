@@ -3,11 +3,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import Shimmer from "./Shimmer";
 import { IMG_CDN_URL } from "../config";
 import useRestaurentInfo from "../utils/useRestaurentInfo";
+import { useDispatch } from "react-redux";
+import { addItem } from "../utils/store/cartSlice";
+import { toast } from "react-toastify";
 
 const RestaurantMenu = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const restaurantData = useRestaurentInfo(id);
+  const dispatch = useDispatch();
 
   if (!restaurantData) return <Shimmer />;
 
@@ -15,6 +19,9 @@ const RestaurantMenu = () => {
 
   const handleAddToCart = (item) => {
     console.log(item);
+
+    dispatch(addItem(item));
+    toast.success("Item added successfully");
   };
 
   return (
@@ -49,7 +56,7 @@ const RestaurantMenu = () => {
 
         {menu.map((item, index) => (
           <div
-            key={`${item.id}-${index}`}
+            key={`${item.id}-${index}}`}
             className="flex justify-between items-start gap-4 border rounded-lg p-4 shadow-sm hover:shadow-md"
           >
             {/* Left: Info */}

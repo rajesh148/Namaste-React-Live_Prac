@@ -1,10 +1,15 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const Header = () => {
+  // const cart = useSelector((store) => store.cart);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const cartItemCount = 3;
+  // const cartItemCount = cart.items.length;
   const isLoggedIn = true;
+
+  const cartItems = useSelector((state) => state.cart.items);
+  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   return (
     <header className="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-gray-200 transition duration-300">
@@ -39,9 +44,9 @@ const Header = () => {
               <Link to="/cart" className="text-gray-700 hover:text-orange-600">
                 Cart
               </Link>
-              {cartItemCount > 0 && (
+              {cartCount > 0 && (
                 <span className="absolute -top-2 -right-3 text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full">
-                  {cartItemCount}
+                  {cartCount}
                 </span>
               )}
             </div>

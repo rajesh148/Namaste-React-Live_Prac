@@ -1,16 +1,16 @@
+import commonImage from "./assets/images/commonFood.jpg";
+
 export const IMG_CDN_URL =
   // "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_508,h_320,c_fill/";
 
   "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/";
 
-  // "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/RX_THUMBNAIL/IMAGES/VENDOR/2025/3/24/f8567b28-d537-4fc5-8652-168b39f170cf_748065.jpg"
+// "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/RX_THUMBNAIL/IMAGES/VENDOR/2025/3/24/f8567b28-d537-4fc5-8652-168b39f170cf_748065.jpg"
 
+// export const FALLBACK_IMAGE = commonImage;
 
-
-  
 export const FETCH_RESTAURENT_MENU_ITEM_URL =
   "https://www.swiggy.com/dapi/menu/v4/full?lat=12.8459348&lng=80.22652289999999&menuId=";
-
 
 // "https://www.swiggy.com/city/chennai/pizza-hut-egattur-rest186549"
 

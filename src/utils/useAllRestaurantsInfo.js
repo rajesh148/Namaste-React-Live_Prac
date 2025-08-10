@@ -14,10 +14,14 @@ const useAllRestaurantsInfo = () => {
     );
     const json = await data.json();
     const restaurants =
+      // json.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
+      // json.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
+      json.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle
+        ?.restaurants ||
       json.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
-    // json.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
 
     setAllRestaurants(restaurants || []);
+    console.log("resttt ", restaurants);
   };
 
   return allRestaurants;

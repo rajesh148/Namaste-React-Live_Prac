@@ -1,20 +1,28 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { IMG_CDN_URL } from "../config";
-import { clearCart, removeItem } from "../utils/store/cartSlice";
+import { clearCart, removeItem, addItem } from "../utils/store/cartSlice";
+import commonImage from "../assets/images/commonFood.jpg"; // ✅ fallback image
+import { toast } from "react-toastify";
 
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
 
+  const fallbackImgUrl =
+    typeof commonImage === "string" ? commonImage : commonImage.default;
+
   const totalAmount = cartItems.reduce(
-    (acc, item) => acc + (item.price ? item.price / 100 : 0),
+    (acc, item) => acc + (item.price ? (item.price / 100) * item.quantity : 0),
     0
   );
 
-  const handleClear = () => dispatch(clearCart());
-
-  const handleRemoveItem = (id) => dispatch(removeItem(id));
+  const handleClear = () => {
+    dispatch(clearCart());
+    toast.success("Items cleared successfully!");
+  };
+  const handleIncrease = (item) => dispatch(addItem(item));
+  const handleDecrease = (id) => dispatch(removeItem(id));
 
   if (cartItems.length === 0) {
     return (
@@ -29,7 +37,6 @@ const Cart = () => {
     <div className="max-w-5xl mx-auto p-6">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">🛍️ Your Cart</h2>
 
-      {/* Cart Items */}
       <div className="space-y-4">
         {cartItems.map((item) => (
           <div
@@ -38,9 +45,17 @@ const Cart = () => {
           >
             <div className="flex items-center gap-4">
               <img
-                src={IMG_CDN_URL + item.cloudinaryImageId}
+                src={
+                  item.cloudinaryImageId
+                    ? IMG_CDN_URL + item.cloudinaryImageId
+                    : fallbackImgUrl
+                }
                 alt={item.name}
                 className="w-20 h-20 object-cover rounded-md"
+                onError={(e) => {
+                  e.target.onerror = null; // prevent infinite loop
+                  e.target.src = fallbackImgUrl;
+                }}
               />
               <div>
                 <h3 className="text-lg font-semibold text-gray-800">
@@ -50,16 +65,18 @@ const Cart = () => {
                   {item.category || item.cuisines?.join(", ")}
                 </p>
                 <p className="text-sm text-orange-500 font-medium">
-                  ₹{(item.price ? item.price / 100 : 0).toFixed(2)}
+                  ₹{(item.price ? item.price / 100 : 0).toFixed(2)} ×{" "}
+                  {item.quantity}
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => handleRemoveItem(item.id)}
-              className="text-red-500 hover:text-red-600 font-semibold text-sm"
-            >
-              Remove
-            </button>
+
+            {/* Quantity Controls */}
+            <div className="flex items-center gap-2">
+              <button onClick={() => dispatch(removeItem(item.id))}>-</button>
+              <span>{item.quantity}</span>
+              <button onClick={() => dispatch(addItem(item))}>+</button>
+            </div>
           </div>
         ))}
       </div>

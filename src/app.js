@@ -15,6 +15,7 @@ import Shimmer from "./components/Shimmer";
 import UserContext from "./utils/UserContext";
 import { Provider } from "react-redux";
 import appStore from "./utils/store/appStore";
+import { Bounce, ToastContainer } from "react-toastify";
 // import Cart from "./components/Cart";
 
 import Cart from "./components/Cart";
@@ -34,6 +35,19 @@ const AppLayout = () => {
         <Header />
         <Outlet />
         <Footer />
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          transition={Bounce}
+        />
       </UserContext.Provider>
     </Provider>
   );
